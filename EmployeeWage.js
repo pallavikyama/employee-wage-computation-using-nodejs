@@ -1,3 +1,4 @@
+const IS_ABSENT = 0;
 const IS_PART_TIME = 1;
 const IS_FULL_TIME = 2;
 const PART_TIME_HOURS = 4;
@@ -112,7 +113,7 @@ function calculateWage(empHours) {
     let totalSalary = empDailyWageArray
         .filter(dailyWage => dailyWage > 0)
         .reduce(findTotal, 0);
-    console.log(`\nUC-9A: Employee Wage with Arrow functions:\nTotal Working Hours: ${totalHours}  Total Wage: ${totalSalary}`);
+    console.log(`\nUC-9-A: Employee Wage with Arrow functions:\nTotal Working Hours: ${totalHours}  Total Wage: ${totalSalary}`);
 
     let nonWorkingDays = new Array();
     let partWorkingDays = new Array();
@@ -122,7 +123,7 @@ function calculateWage(empHours) {
         else if (value == PART_TIME_HOURS) partWorkingDays.push(key);
         else nonWorkingDays.push(key);
     });
-    console.log(`UC-9B: Full Working Days: ${fullWorkingDays}\nPart Working Days: ${partWorkingDays}\nNon Working Days: ${nonWorkingDays}`);
+    console.log(`UC-9-B: Full Working Days: ${fullWorkingDays}\nPart Working Days: ${partWorkingDays}\nNon Working Days: ${nonWorkingDays}`);
 }
 
 // 10. Object Creation
@@ -145,3 +146,30 @@ while (totalEmpHours <= MAX_WORKING_HOURS_IN_MONTH && totalWorkingDays < NUM_OF_
         });
 }
 console.log("\nUC-10: Showing Daily Hours Worked and Wage Earned: " + empDailyHoursAndWageArray);
+
+// 11. Using object functions along with arrow functions
+// 11.a. Calculate total wage and total hours worked
+let totalWages = empDailyHoursAndWageArray
+    .filter(dailyHoursAndWage => dailyHoursAndWage.dailyWage > 0)
+    .reduce((totalWage, dailyHoursAndWage) => totalWage += dailyHoursAndWage.dailyWage, 0);
+let totalHours = empDailyHoursAndWageArray
+    .filter(dailyHoursAndWage => dailyHoursAndWage.dailyWage > 0)
+    .reduce((totalHour, dailyHoursAndWage) => totalHour += dailyHoursAndWage.dailyHours, 0);
+console.log("\nUC-11-A: Employee Wage with objects and arrow functions:\nTotal Working Hours: " + totalHours + "  Total Wage: " + totalWages);
+
+// 11.b. Show the full working days using forEach
+process.stdout.write("UC-11-B: Logging full-work days:");
+empDailyHoursAndWageArray.filter(dailyHoursAndWage => dailyHoursAndWage.dailyHours == FULL_TIME_HOURS)
+    .forEach(dailyHoursAndWage => process.stdout.write(dailyHoursAndWage.toString()));
+
+// 11.c. Show part working days using map by reducing to String Array
+let partWorkingDayStrArray = empDailyHoursAndWageArray
+    .filter(dailyHoursAndWage => dailyHoursAndWage.dailyHours == PART_TIME_HOURS)
+    .map(dailyHoursAndWage => dailyHoursAndWage.toString());
+console.log("\nUC-11-C: Part-working day strings: " + partWorkingDayStrArray);
+
+// 11.d. No working days only using map function
+let nonWorkingDayNums = empDailyHoursAndWageArray
+    .filter(dailyHoursAndWage => dailyHoursAndWage.dailyHours == IS_ABSENT)
+    .map(dailyHoursAndWage => dailyHoursAndWage.dayNum);
+console.log("UC-11-D: Non-working days: " + nonWorkingDayNums);
